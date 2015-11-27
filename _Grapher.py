@@ -25,6 +25,9 @@ class TextOnScreen:
     #font4 = font.SysFont('Times New Roman', 20)
     font4 = font.SysFont('Verdana', 20)
 
+    # Font for invalid equation entries
+    font5 = font.SysFont('Verdana', 12)
+
     # Constants
     instructionsWidth = 20
     shortcutsHeight = 0
@@ -64,6 +67,7 @@ class GrapherMain:
     darkBlue = (20, 100, 220)
     blue = (51, 153, 255)
     orange = (255, 153, 51)
+    red = (255, 0, 0)
     gray = (127, 127, 127)
     lightGray = (245, 245, 245)
     linesGray = (200, 200, 200)
@@ -92,7 +96,6 @@ class GrapherMain:
         # k is the number of pixels per unit on the grid
         # k must always be a factor of width and height
         k = self.kValues[self.kIndex]
-
 
         COLOUR = self.blue
         if Graphs == 1:
@@ -152,7 +155,7 @@ class GrapherMain:
 
             # Equation array refreshing
             buffer1 = 20
-            screen.set_clip(buffer1, 190, self.extraWidth - 2* buffer1, 40)
+            screen.set_clip(buffer1, 180, self.extraWidth - 2* buffer1, 40)
             screen.fill(self.white)
             screen.set_clip(None)
             screen.set_clip(buffer1, 227, self.extraWidth - 2*buffer1, 40)
@@ -362,7 +365,10 @@ class GrapherMain:
                 else:
                     pygame.draw.line(screen, COLOUR, pos1, pos2, 2)
             except:
-                print("Invalid equation, please enter something else.")
+                # Add label for user feedback
+                message = "INVALID EQUATION - Press enter, then type another equation."
+                invalid = TextOnScreen.font5.render(message, 1, self.red)
+                screen.blit(invalid, (20, 170))
                 break
 
     def presentScreenTwo(self, screen, k, eq, eq2):
