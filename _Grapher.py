@@ -12,15 +12,15 @@ class TextOnScreen:
     # Fonts
     # Title font
     font1 = font.SysFont('Bauhaus 93', 36)
-    
+
     # Instructions font
     #font2 = font.SysFont('Ariel', 24)
     font2 = font.SysFont('Verdana', 16)
-    
+
     # Shortcuts font
     #font3 = font.SysFont('Times New Roman', 16)
     font3 = font.SysFont('Verdana', 14)
-    
+
     # Equation font
     #font4 = font.SysFont('Times New Roman', 20)
     font4 = font.SysFont('Verdana', 20)
@@ -28,7 +28,7 @@ class TextOnScreen:
     # Constants
     instructionsWidth = 20
     shortcutsHeight = 0
-    
+
     def title(self, screen, text, width, height):
         title = self.font1.render(text, 1, GrapherMain.darkBlue)
         screen.blit(title, (width, height))
@@ -48,7 +48,7 @@ class TextOnScreen:
             self.shortcutsHeight = 270
 
         self.shortcutsHeight += 260
-            
+
         shortcuts = self.font3.render(text, 1, GrapherMain.black)
         screen.blit(shortcuts, (width, self.shortcutsHeight))
 
@@ -81,7 +81,7 @@ class GrapherMain:
     graph = 1
 
     # Init method will run automatically when class is instantiated
-    def __init__(self, Graphs, eq):        
+    def __init__(self, Graphs, eq):
         screen = display.set_mode((self.width + self.extraWidth, self.height))
 
         # Name of standard window
@@ -93,7 +93,7 @@ class GrapherMain:
         # k must always be a factor of width and height
         k = self.kValues[self.kIndex]
 
-        
+
         COLOUR = self.blue
         if Graphs == 1:
             screen.fill(self.white)
@@ -144,8 +144,8 @@ class GrapherMain:
         screenOneInfo.shortcuts(screen, "ln(", 100, 4)
         screenOneInfo.shortcuts(screen, "e (~2.72)", 180, 4)
         screenOneInfo.shortcuts(screen, "pi (~3.14)", 260, 4)
-        
-        
+
+
         while True:
             # Constantly refresh the screen
             display.update()
@@ -167,7 +167,7 @@ class GrapherMain:
 
             # Render and blit equation
             showEqLabel = screenOneInfo.font4.render("Equation:", 1, self.black)
-            screen.blit(showEqLabel, (30, 195))  
+            screen.blit(showEqLabel, (30, 195))
             showEq = screenOneInfo.font4.render("y = " + eq, 1, self.black)
             screen.blit(showEq, (30, 232))
 
@@ -175,7 +175,7 @@ class GrapherMain:
             eq = eq.replace("^", "**")
             eq = eq.replace("ln(", "log(")
             eq = eq.replace("pix", "pi*x")
-            for num in range(10):                
+            for num in range(10):
                 eq = eq.replace(str(num)+ "x", str(num) + "*x")
                 eq = eq.replace(str(num)+ "sin(", str(num) + "*sin(")
                 eq = eq.replace(str(num)+ "cos(", str(num) + "*cos(")
@@ -196,7 +196,7 @@ class GrapherMain:
 
                 # When a key is pressed, do something
                 elif event.type == pygame.KEYDOWN:
-                
+
                     if event.unicode == u'*':
                         equation.append("*")
                     elif event.unicode == u'+':
@@ -213,7 +213,7 @@ class GrapherMain:
                         equation.append(")")
                     elif event.unicode == u'^':
                         equation.append("^")
-                        
+
                     elif event.key == K_1:
                         equation.append("1")
                     elif event.key == K_2:
@@ -254,7 +254,7 @@ class GrapherMain:
                         equation.append("e")
                     elif event.key == K_p:
                         equation.append("pi")
-                        
+
                     elif event.key == K_x:
                         equation.append("x")
                     elif event.key == K_RETURN:
@@ -263,7 +263,7 @@ class GrapherMain:
                             if eq.count("(") > eq.count(")"):
                                 count = eq.count("(") - eq.count(")")
                                 eq += ")" * count
-                                
+
                             # Clip screen
                             screen.set_clip(0, 0, self.extraWidth, 190)
                             screen.fill(self.white)
@@ -279,9 +279,9 @@ class GrapherMain:
 
                             # Plot the graph based on the equation input
                             self.plotLine(screen, k, eq, COLOUR)
-                            self.presentScreenTwo(screen, k, eq, eq2)                        
+                            self.presentScreenTwo(screen, k, eq, eq2)
                         break
-                    
+
                     elif event.key == K_DELETE:
                         equation = []
                         screen.fill(white)
@@ -291,7 +291,7 @@ class GrapherMain:
                     elif event.key == K_g:
                         screen.fill(self.white)
                         GrapherMain(1, ' ')
-        #sys.exit()    
+        #sys.exit()
 
     def graphPaper(self, k, screen):
         # k is the number of pixels per unit on the grid
@@ -306,7 +306,7 @@ class GrapherMain:
             else:
                 gridx = k * i - 1
                 gridy = k * i - 1
-                    
+
             draw.line(screen, self.linesGray, (self.extraWidth + gridx, 0),
                       (self.extraWidth + gridx, self.height), 1)
             draw.line(screen, self.linesGray, (self.extraWidth, gridy),
@@ -337,7 +337,7 @@ class GrapherMain:
                 x = (self.width/2 - i)/float(k)
                 y = eval(eq)
                 pos1 = (self.width/2 + x * k + self.extraWidth, self.height/2 - y * k)
-                
+
                 nx = x = (self.width/2 - i - 1)/float(k)
                 ny = eval(eq)
                 pos2 = (self.width/2 + nx * k + self.extraWidth, self.height/2 - ny * k)
@@ -347,23 +347,24 @@ class GrapherMain:
                 if (self.width/2 + x * k + self.extraWidth) - (self.width/2 + nx * k + self.extraWidth) > BIG_NUM:
                     # Asyptote so do not draw a line (horizontal)
                     pass
-                
+
                 elif (self.width/2 + nx * k + self.extraWidth) - (self.width/2 + x * k + self.extraWidth) > BIG_NUM:
                     # Asyptote so do not draw a line (horizontal)
                     pass
-                
+
                 elif (self.height/2 - y * k) - (self.height/2 - ny * k) > BIG_NUM:
                     # Asyptote so do not draw a line (vertical)
                     pass
-                
+
                 elif (self.height/2 - ny * k) - (self.height/2 - y * k) > BIG_NUM:
                     # Asyptote so do not draw a line (vertical)
                     pass
                 else:
                     pygame.draw.line(screen, COLOUR, pos1, pos2, 2)
             except:
+                print("Invalid equation, please enter something else.")
                 break
-            
+
     def presentScreenTwo(self, screen, k, eq, eq2):
         screenTwoInfo = TextOnScreen()
 
@@ -381,7 +382,7 @@ class GrapherMain:
             yInt = round(yInt, 2)
         except:
             yInt = 'dne'
-            
+
         screenTwoInfo.instructions(screen, "The y-intercept is at (0," + str(yInt) + ").", 130)
 
         while True:
@@ -408,7 +409,7 @@ class GrapherMain:
                     elif event.key == K_BACKSPACE and GrapherMain.graph == 1:
                         GrapherMain.graph = 2
                         newGrapherNext = GrapherMain(GrapherMain.graph, eq)
-                        
+
                     elif event.unicode == u'+' or event.unicode == u'=':
                         # next value in array kValues
                         if (self.kIndex >= len(self.kValues) - 1) == False:
@@ -421,7 +422,7 @@ class GrapherMain:
                         screen.set_clip(0, 300, self.extraWidth, self.height - 300)
                         screen.fill(self.white)
                         screen.set_clip(None)
-                        
+
                         self.graphPaper(k, screen)
 
                         # Colour the graph based on the equation number (1 or 2)
@@ -432,7 +433,7 @@ class GrapherMain:
                             self.plotLine(screen, k, eq, self.orange)
                             self.plotLine(screen, k, eq2, self.blue)
                             self.presentScreenTwo(screen, k, eq, eq2)
-                    
+
                     elif event.unicode == u'-':
                         # previous value in array kValues
                         if (self.kIndex <= 0) == False:
@@ -445,7 +446,7 @@ class GrapherMain:
                         screen.set_clip(0, 300, self.extraWidth, self.height - 300)
                         screen.fill(self.white)
                         screen.set_clip(None)
-                        
+
                         self.graphPaper(k, screen)
 
                         # Colour the graph based on the equation number (1 or 2)
@@ -456,7 +457,7 @@ class GrapherMain:
                             self.plotLine(screen, k, eq, self.orange)
                             self.plotLine(screen, k, eq2, self.blue)
                             self.presentScreenTwo(screen, k, eq, eq2)
-                            
+
 if __name__=='__main__':
     # Instantiate the main class (main program start point)
     initialGrapher = GrapherMain(GrapherMain.graph, ' ')
